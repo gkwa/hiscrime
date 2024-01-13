@@ -1,46 +1,45 @@
-from grafanalib.core import (OPS_FORMAT, Dashboard, GaugePanel, GridPos,
-                             Target, TimeSeries)
+import grafanalib.core
 
-dashboard = Dashboard(
+dashboard = grafanalib.core.Dashboard(
     title="Python generated example dashboard",
     description="Example dashboard using the Random Walk and default Prometheus datasource",
     tags=["example"],
     timezone="browser",
     panels=[
-        TimeSeries(
+        grafanalib.core.TimeSeries(
             title="Random Walk",
             dataSource="default",
             targets=[
-                Target(
+                grafanalib.core.Target(
                     datasource="grafana",
                     expr="example",
                 ),
             ],
-            gridPos=GridPos(h=8, w=16, x=0, y=0),
+            gridPos=grafanalib.core.GridPos(h=8, w=16, x=0, y=0),
         ),
-        GaugePanel(
+        grafanalib.core.GaugePanel(
             title="Random Walk",
             dataSource="default",
             targets=[
-                Target(
+                grafanalib.core.Target(
                     datasource="grafana",
                     expr="example",
                 ),
             ],
-            gridPos=GridPos(h=4, w=4, x=17, y=0),
+            gridPos=grafanalib.core.GridPos(h=4, w=4, x=17, y=0),
         ),
-        TimeSeries(
+        grafanalib.core.TimeSeries(
             title="Prometheus http requests",
             dataSource="prometheus",
             targets=[
-                Target(
+                grafanalib.core.Target(
                     expr="rate(prometheus_http_requests_total[5m])",
                     legendFormat="{{ handler }}",
                     refId="A",
                 ),
             ],
-            unit=OPS_FORMAT,
-            gridPos=GridPos(h=8, w=16, x=0, y=10),
+            unit=grafanalib.core.OPS_FORMAT,
+            gridPos=grafanalib.core.GridPos(h=8, w=16, x=0, y=10),
         ),
     ],
 ).auto_panel_ids()
