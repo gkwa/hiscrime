@@ -1,0 +1,14 @@
+* hiscrime
+
+** summary
+
+This is a description of project hiscrime.
+
+** usage
+
+Example:
+#+begin_example
+make test
+./hiscrime --help
+./hiscrime --verbose --verbose # for debug
+#+end_example
