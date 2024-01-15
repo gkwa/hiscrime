@@ -1,7 +1,7 @@
 import json
 
 import grafanalib._gen
-import grafanalib.core
+import grafanalib.core, attr
 import requests
 
 
@@ -65,6 +65,58 @@ def upload_to_grafana(json_str, server, api_key, verify=True):
 grafana_api_key = get_api_key()
 grafana_server = "127.0.0.1:3000"
 
-my_dashboard = grafanalib.core.Dashboard(title="My awesome dashboard", uid="abifsd")
-my_dashboard_json = get_dashboard_json(my_dashboard, overwrite=True)
+extraJsonDaily = {
+    "targets": [
+        {
+            "cacheDurationSeconds": 300,
+            "datasource": {
+                "type": "marcusolsson-json-datasource",
+                "uid": "PFB9AD6BF627C7A10",
+            },
+            "fields": [
+                {"jsonPath": "$..start_time", "language": "jsonpath", "type": "time"},
+                {"jsonPath": "$..import_kwh", "language": "jsonpath", "type": "number"},
+            ],
+        }
+    ]
+}
+
+extraJsonRaw = {
+    "targets": [
+        {
+            "cacheDurationSeconds": 300,
+            "datasource": {
+                "type": "marcusolsson-json-datasource",
+                "uid": "PFB9AD6BF627C7A10",
+            },
+            "fields": [
+                {"jsonPath": "$..end_time", "language": "jsonpath", "type": "time"},
+                {"jsonPath": "$..import_kwh", "language": "jsonpath", "type": "number"},
+            ],
+        }
+    ]
+}
+
+dashboard = grafanalib.core.Dashboard(
+    title="Electricity Usage",
+    time=grafanalib.core.Time("now-2y", "now"),
+    timezone="browser",
+    panels=[
+        grafanalib.core.TimeSeries(
+            title="Daily aggregate",
+            dataSource="My JSON datasource - daily",
+            extraJson=extraJsonDaily,
+            gridPos=grafanalib.core.GridPos(h=10, w=100, x=0, y=0),
+        ),
+        grafanalib.core.TimeSeries(
+            title="Raw data",
+            dataSource="My JSON datasource - raw",
+            extraJson=extraJsonRaw,
+            gridPos=grafanalib.core.GridPos(h=10, w=100, x=0, y=0),
+        ),
+    ],
+).auto_panel_ids()
+
+
+my_dashboard_json = get_dashboard_json(dashboard, overwrite=True)
 upload_to_grafana(my_dashboard_json, grafana_server, grafana_api_key)
