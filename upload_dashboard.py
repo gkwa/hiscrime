@@ -5,7 +5,7 @@ import grafanalib.core, attr
 import requests
 
 
-def get_api_key(json_path="/Users/mtm/pdev/taylormonacelli/hereville/resp_token.json"):
+def get_api_key(json_path="../hereville/resp_token.json"):
     with open(json_path, "r") as file:
         data = json.load(file)
 
